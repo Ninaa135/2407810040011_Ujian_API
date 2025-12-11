@@ -44,22 +44,29 @@ class _RegisterState extends State<Register> {
 
       final response = await http.post(
         _registerUrl,
-        headers: <String>{
+        headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode({
-          "firstName": _firstNameController,
-          "lastName": _firstNameController,
-          "age": _firstNameController,
-          "email": _firstNameController,
+          "firstName": _firstNameController.text,
+          "lastName": _lastNameController.text,
+          "age": ageValue,
+          "email": _emailController.text,
         }),
       );
 
       if (!mounted) return;
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final responseData = jsonDecode(jsonDecode(response.body);
-        final String fullName = '${responseData['firstName']} ${responData['lastName']}')
+        final responseData = jsonDecode(response.body);
+        final String fullName = '${responseData['firstName']} ${responData['lastName']}';
+
+        ScaffoldMassenger.of(context).showSnackBar(
+          SnackBar(content: text('Berhasil Mendaftar $fullName]'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          ),
+        );
       }
   }
 
