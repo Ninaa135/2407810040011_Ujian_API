@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nina_2407810040011_ujian_api/pages/list.dart';
 import 'package:nina_2407810040011_ujian_api/pages/registrasi.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ujian API Dummy JSON',
       theme: ThemeData(
         
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
