@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -9,6 +11,11 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Widget _buildInputField(
     String label,
@@ -42,6 +49,17 @@ class _RegisterState extends State<Register> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               _buildInputField('First Name', _firstNameController),
+              const SizedBox(height: 16.0),
+
+              _buildInputField('Last Name', _lastNameController),
+              const SizedBox(height: 16.0),
+
+              _buildInputField('Age', _ageController, isNumber: true),
+              const SizedBox(height: 16.0),
+
+              _buildInputField('Email', _emailController, isEmail: true),
+              const SizedBox(height: 32.0),
+              
             ],
           ),
         ),
