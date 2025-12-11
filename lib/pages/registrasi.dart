@@ -17,6 +17,35 @@ class _RegisterState extends State<Register> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _isLoading = false;
+
+  final Uri _registerUrl = Uri.parse('https://dummyjson.com/users/add');
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _ageController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _registerUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final int ageValue = int.parse(_ageController.text);
+
+      final response
+    }
+  }
+
   Widget _buildInputField(
     String label,
     TextEditingController controller, {
@@ -34,6 +63,20 @@ class _RegisterState extends State<Register> {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '$label tidak boleh kosong';
+        }
+        if (isEmail && !value.contains('@')) {
+          return 'Masukkan format Email yang valid';
+        }
+        if (isNumber) {
+          if (int.tryParse(value) == null) {
+            return '$label harus berupa angka';
+          }
+        }
+        return null;
+      },
     );
   }
 
@@ -59,7 +102,31 @@ class _RegisterState extends State<Register> {
 
               _buildInputField('Email', _emailController, isEmail: true),
               const SizedBox(height: 32.0),
-              
+
+              ElevatedButton(
+                onPressed: isLoading ? null : _registerUser,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18.0),
+                  backgroundColor: Colors.blueAccent,
+                  foregroundColor: Colors.white,
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : const Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+              ),
             ],
           ),
         ),
