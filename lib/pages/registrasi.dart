@@ -42,8 +42,25 @@ class _RegisterState extends State<Register> {
     try {
       final int ageValue = int.parse(_ageController.text);
 
-      final response
-    }
+      final response = await http.post(
+        _registerUrl,
+        headers: <String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode({
+          "firstName": _firstNameController,
+          "lastName": _firstNameController,
+          "age": _firstNameController,
+          "email": _firstNameController,
+        }),
+      );
+
+      if (!mounted) return;
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final responseData = jsonDecode(jsonDecode(response.body);
+        final String fullName = '${responseData['firstName']} ${responData['lastName']}')
+      }
   }
 
   Widget _buildInputField(
