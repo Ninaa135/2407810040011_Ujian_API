@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:nina_2407810040011_ujian_api/pages/list.dart';
+
 class Register extends StatefulWidget {
   const Register({super.key});
 
@@ -41,33 +43,62 @@ class _RegisterState extends State<Register> {
 
     try {
       final int ageValue = int.parse(_ageController.text);
-
+      
       final response = await http.post(
         _registerUrl,
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
+          'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
           "firstName": _firstNameController.text,
           "lastName": _lastNameController.text,
-          "age": ageValue,
+          "age": ageValue, 
           "email": _emailController.text,
         }),
       );
 
       if (!mounted) return;
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.statusCode >= 200 && response.statusCode < 300) { // Cek Status 2xx (Sukses)
         final responseData = jsonDecode(response.body);
-        final String fullName = '${responseData['firstName']} ${responData['lastName']}';
+        final String fullName = '${responseData['firstName']} ${responseData['lastName']}';
 
-        ScaffoldMassenger.of(context).showSnackBar(
-          SnackBar(content: text('Berhasil Mendaftar $fullName]'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Berhasil Mendaftar: $fullName'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Todolist()),
+        );
+
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal Mendaftar. Status: ${response.statusCode}'),
+            backgroundColor: Colors.red,
           ),
         );
       }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Widget _buildInputField(
@@ -128,13 +159,13 @@ class _RegisterState extends State<Register> {
               const SizedBox(height: 32.0),
 
               ElevatedButton(
-                onPressed: isLoading ? null : _registerUser,
+                onPressed: _isLoading ? null : _registerUser,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
                   backgroundColor: Colors.blueAccent,
                   foregroundColor: Colors.white,
                 ),
-                child: isLoading
+                child: _isLoading
                     ? const SizedBox(
                         width: 20,
                         height: 20,
